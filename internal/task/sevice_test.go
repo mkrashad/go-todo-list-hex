@@ -2,7 +2,6 @@ package task_test
 
 import (
 	"errors"
-	"fmt"
 	"testing"
 
 	"github.com/mkrashad/go-todo/internal/task"
@@ -106,9 +105,7 @@ func (ts *TaskServiceUnitTestSuite) TestCreateTaskInValid() {
 
 	// when
 	_, err := ts.underTest.CreateTask(newTask)
-
-	fmt.Print(err)
-
+	
 	// then
 	ts.Error(err)
 	ts.mockTaskRepository.AssertExpectations(ts.T())
@@ -119,7 +116,7 @@ func (ts *TaskServiceUnitTestSuite) TestUpdateTaskById_ValidUpdate() {
 	updatedTask := tasks[0]
 	updatedTask.Completed = true
 	updatedTask.Name = "Read a book"
-	ts.mockTaskRepository.On("UpdateTaskById", id, mock.Anything).Once().Return(updatedTask, nil)
+	ts.mockTaskRepository.On("UpdateTaskById", id, updatedTask).Once().Return(updatedTask, nil)
 
 	// when
 	result, err := ts.underTest.UpdateTaskById(id, updatedTask)
@@ -235,7 +232,7 @@ func BenchmarkTaskService_DeleteTaskById(b *testing.B) {
 	mockTaskRepository := new(mocks.Repository)
 	underTest := task.NewTaskService(mockTaskRepository)
 
-	mockTaskRepository.On("DeleteTaskById", id).Return(nil)
+	mockTaskRepository.On("DeleteTaskById", id).Once().Return(nil)
 
 	b.ResetTimer()
 

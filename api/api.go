@@ -4,7 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Router(taskHandler *TaskHandler) *gin.Engine {
+func Router(taskHandler *TaskHandler, userHandler *UserHandler) *gin.Engine {
 	r := gin.Default()
 	// Tasks
 	r.GET("/tasks", taskHandler.GetAllTasks)
@@ -14,11 +14,11 @@ func Router(taskHandler *TaskHandler) *gin.Engine {
 	r.DELETE("/tasks/:id", taskHandler.DeleteTaskById)
 
 	// Users
-	// r.POST("/users", controllers.CreateUser)
-	// r.PUT("/users/:id", controllers.UpdateUser)
-	// r.GET("/users", controllers.GetAllUsers)
-	// r.GET("/users/:id", controllers.GetUserById)
-	// r.DELETE("/users/:id", controllers.DeleteUser)
-	// r.Run()
+	r.GET("/users", userHandler.GetAllUsers)
+	r.GET("/users/:id", userHandler.GetUserById)
+	r.POST("/users", userHandler.CreateUser)
+	r.PUT("/users/:id", userHandler.UpdateUserById)
+	r.DELETE("/users/:id", userHandler.DeleteUserById)
+
 	return r
 }

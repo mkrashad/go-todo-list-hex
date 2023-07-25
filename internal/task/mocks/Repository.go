@@ -90,23 +90,23 @@ func (_m *Repository) GetTaskById(id uint64) (task.Task, error) {
 	return r0, r1
 }
 
-// UpdateTaskById provides a mock function with given fields: id, data
-func (_m *Repository) UpdateTaskById(id uint64, data task.Task) (task.Task, error) {
-	ret := _m.Called(id, data)
+// UpdateTaskById provides a mock function with given fields: id, _a1
+func (_m *Repository) UpdateTaskById(id uint64, _a1 task.Task) (task.Task, error) {
+	ret := _m.Called(id, _a1)
 
 	var r0 task.Task
 	var r1 error
 	if rf, ok := ret.Get(0).(func(uint64, task.Task) (task.Task, error)); ok {
-		return rf(id, data)
+		return rf(id, _a1)
 	}
 	if rf, ok := ret.Get(0).(func(uint64, task.Task) task.Task); ok {
-		r0 = rf(id, data)
+		r0 = rf(id, _a1)
 	} else {
 		r0 = ret.Get(0).(task.Task)
 	}
 
 	if rf, ok := ret.Get(1).(func(uint64, task.Task) error); ok {
-		r1 = rf(id, data)
+		r1 = rf(id, _a1)
 	} else {
 		r1 = ret.Error(1)
 	}

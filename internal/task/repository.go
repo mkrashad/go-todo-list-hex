@@ -4,6 +4,7 @@ import (
 	"gorm.io/gorm"
 )
 
+//go:generate mockery --name Repository
 type Repository interface {
 	GetAllTasks() []Task
 	GetTaskById(id uint64) (Task, error)
@@ -17,7 +18,7 @@ type taskRepository struct {
 }
 
 // Dependency injection
-func NewTaskRepository(db *gorm.DB) *taskRepository {
+func NewTaskRepository(db *gorm.DB) Repository {
 	return &taskRepository{DB: db}
 }
 
@@ -29,7 +30,7 @@ func (tr taskRepository) GetAllTasks() []Task {
 
 func (tr taskRepository) GetTaskById(id uint64) (Task, error) {
 	var task Task
-	result := tr.DB.Find(&task, id)
+	result := tr.DB.First(&task, id)
 	return task, result.Error
 }
 

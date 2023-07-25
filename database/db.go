@@ -7,6 +7,7 @@ import (
 
 	"github.com/joho/godotenv"
 	"github.com/mkrashad/go-todo/internal/task"
+	"github.com/mkrashad/go-todo/internal/user"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -44,7 +45,7 @@ func ConnectToDB() {
 }
 
 func SyncDB() {
-	err := DB.AutoMigrate(&task.Task{})
+	err := DB.AutoMigrate(&task.Task{}, &user.User{})
 	if err != nil {
 		log.Fatal("Could not migrate:", err)
 	}

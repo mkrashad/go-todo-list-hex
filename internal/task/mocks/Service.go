@@ -37,8 +37,17 @@ func (_m *Service) CreateTask(_a0 task.Task) (task.Task, error) {
 }
 
 // DeleteTaskById provides a mock function with given fields: id
-func (_m *Service) DeleteTaskById(id uint) {
-	_m.Called(id)
+func (_m *Service) DeleteTaskById(id uint64) error {
+	ret := _m.Called(id)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(uint64) error); ok {
+		r0 = rf(id)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
 }
 
 // GetAllTasks provides a mock function with given fields:
@@ -58,21 +67,21 @@ func (_m *Service) GetAllTasks() []task.Task {
 }
 
 // GetTaskById provides a mock function with given fields: id
-func (_m *Service) GetTaskById(id uint) (task.Task, error) {
+func (_m *Service) GetTaskById(id uint64) (task.Task, error) {
 	ret := _m.Called(id)
 
 	var r0 task.Task
 	var r1 error
-	if rf, ok := ret.Get(0).(func(uint) (task.Task, error)); ok {
+	if rf, ok := ret.Get(0).(func(uint64) (task.Task, error)); ok {
 		return rf(id)
 	}
-	if rf, ok := ret.Get(0).(func(uint) task.Task); ok {
+	if rf, ok := ret.Get(0).(func(uint64) task.Task); ok {
 		r0 = rf(id)
 	} else {
 		r0 = ret.Get(0).(task.Task)
 	}
 
-	if rf, ok := ret.Get(1).(func(uint) error); ok {
+	if rf, ok := ret.Get(1).(func(uint64) error); ok {
 		r1 = rf(id)
 	} else {
 		r1 = ret.Error(1)
@@ -82,21 +91,21 @@ func (_m *Service) GetTaskById(id uint) (task.Task, error) {
 }
 
 // UpdateTaskById provides a mock function with given fields: id, data
-func (_m *Service) UpdateTaskById(id uint, data task.Task) (task.Task, error) {
+func (_m *Service) UpdateTaskById(id uint64, data task.Task) (task.Task, error) {
 	ret := _m.Called(id, data)
 
 	var r0 task.Task
 	var r1 error
-	if rf, ok := ret.Get(0).(func(uint, task.Task) (task.Task, error)); ok {
+	if rf, ok := ret.Get(0).(func(uint64, task.Task) (task.Task, error)); ok {
 		return rf(id, data)
 	}
-	if rf, ok := ret.Get(0).(func(uint, task.Task) task.Task); ok {
+	if rf, ok := ret.Get(0).(func(uint64, task.Task) task.Task); ok {
 		r0 = rf(id, data)
 	} else {
 		r0 = ret.Get(0).(task.Task)
 	}
 
-	if rf, ok := ret.Get(1).(func(uint, task.Task) error); ok {
+	if rf, ok := ret.Get(1).(func(uint64, task.Task) error); ok {
 		r1 = rf(id, data)
 	} else {
 		r1 = ret.Error(1)
