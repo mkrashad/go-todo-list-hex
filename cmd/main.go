@@ -4,7 +4,7 @@ import (
 	"log"
 
 	"github.com/mkrashad/go-todo/api"
-	initilalizers "github.com/mkrashad/go-todo/database"
+	initilalizers "github.com/mkrashad/go-todo/db"
 	"github.com/mkrashad/go-todo/internal/task"
 	"github.com/mkrashad/go-todo/internal/user"
 )

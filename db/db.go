@@ -45,7 +45,7 @@ func ConnectToDB() {
 }
 
 func SyncDB() {
-	err := DB.AutoMigrate(&task.Task{}, &user.User{})
+	err := DB.AutoMigrate(&user.User{}, &task.Task{})
 	if err != nil {
 		log.Fatal("Could not migrate:", err)
 	}
