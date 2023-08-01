@@ -1,6 +1,6 @@
 services: 
   db: 
-    image: postgres:alpine
+    image: postgres
     container_name: db-golang-todo
     environment:
       POSTGRES_USER: ${DB_USER}
@@ -12,15 +12,6 @@ services:
       test: [ "CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}" ]
       interval: 10s
       retries: 10
-  pgadmin:
-    container_name: pgadmin
-    image: dpage/pgadmin4
-    restart: always
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${DB_USER}@admin.com
-      PGADMIN_DEFAULT_PASSWORD: ${DB_PASSWORD}
-    ports:
-      - "5050:80"
   app: 
     build:
       context: .

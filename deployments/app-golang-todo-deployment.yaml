@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-golang-todo
+  labels:
+    app: app-golang-todo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app-golang-todo
+  template:
+    metadata:
+      labels:
+        app: app-golang-todo
+    spec:
+      containers:
+        - name: app-golang-todo
+          image: rashad251/go-to-do
+          resources:
+            limits:
+              memory: 512Mi
+              cpu: "1"
+          env:
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  key: app-golang-postgres-user
+                  name: app-golang-secret
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: app-golang-postgres-password
+                  name: app-golang-secret
+            - name: DB_HOST
+              value: app-golang-postgres
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_NAME
+              value: todolist
+          ports:
+            - containerPort: 8080
+      initContainers:
+        - name: init-app-golang-todo
+          image: rashad251/go-to-do
+          env:
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  key: app-golang-postgres-user
+                  name: app-golang-secret
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: app-golang-postgres-password
+                  name: app-golang-secret
+            - name: DB_HOST
+              value: app-golang-postgres
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_NAME
+              value: todolist
+          command: ["/bin/sh"]
+          args:
+            - -c
+            - >-
+              ./migrate -path db/migrations -database "postgresql://$(DB_USERNAME):$(DB_PASSWORD)@${DB_HOST}:$(DB_PORT)/$(DB_NAME)?sslmode=disable" up
