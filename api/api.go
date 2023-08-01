@@ -2,10 +2,17 @@ package api
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/zsais/go-gin-prometheus"
 )
 
 func Router(taskHandler *TaskHandler, userHandler *UserHandler) *gin.Engine {
 	r := gin.Default()
+
+	// Setup Prometheus
+	p := ginprometheus.NewPrometheus("gin")
+	p.Use(r)
+
+
 	// Tasks
 	r.GET("/tasks", taskHandler.GetAllTasks)
 	r.GET("/tasks/:id", taskHandler.GetTaskById)
