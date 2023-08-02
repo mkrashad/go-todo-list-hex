@@ -4,8 +4,8 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/mkrashad/go-todo/internal/task"
-	"github.com/mkrashad/go-todo/internal/task/mocks"
+	"github.com/mkrashad/go-todo/task/internal"
+	"github.com/mkrashad/go-todo/task/internal/mocks"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/suite"
 )
@@ -18,11 +18,11 @@ type TaskServiceUnitTestSuite struct {
 
 var tasks = []task.Task{
 	{
-		Name:      "Study for exam",
+		TaskName:      "Study for exam",
 		Completed: false,
 	},
 	{
-		Name:      "Play soccer",
+		TaskName:      "Play soccer",
 		Completed: true,
 	},
 }
@@ -81,7 +81,7 @@ func (ts *TaskServiceUnitTestSuite) TestGetTaskById_InvalidId() {
 func (ts *TaskServiceUnitTestSuite) TestCreateTaskValid() {
 	// given
 	newTask := task.Task{
-		Name:      "new task",
+		TaskName:      "new task",
 		Completed: false,
 	}
 	ts.mockTaskRepository.On("CreateTask", newTask).Once().Return(newTask, nil)
@@ -98,7 +98,7 @@ func (ts *TaskServiceUnitTestSuite) TestCreateTaskValid() {
 func (ts *TaskServiceUnitTestSuite) TestCreateTaskInValid() {
 	// given
 	newTask := task.Task{
-		Name:      "new task",
+		TaskName:      "new task",
 		Completed: false,
 	}
 	ts.mockTaskRepository.On("CreateTask", newTask).Once().Return(newTask, errors.New("error"))
@@ -115,7 +115,7 @@ func (ts *TaskServiceUnitTestSuite) TestUpdateTaskById_ValidUpdate() {
 	// given
 	updatedTask := tasks[0]
 	updatedTask.Completed = true
-	updatedTask.Name = "Read a book"
+	updatedTask.TaskName = "Read a book"
 	ts.mockTaskRepository.On("UpdateTaskById", id, updatedTask).Once().Return(updatedTask, nil)
 
 	// when
@@ -131,7 +131,7 @@ func (ts *TaskServiceUnitTestSuite) TestUpdateTaskById_InvalidUpdate() {
 	// given
 	updatedTask := tasks[0]
 	updatedTask.Completed = true
-	updatedTask.Name = "Read a book"
+	updatedTask.TaskName = "Read a book"
 	ts.mockTaskRepository.On("UpdateTaskById", id, mock.Anything).Once().Return(task.Task{}, errors.New("error"))
 
 	// when
@@ -198,7 +198,7 @@ func BenchmarkTaskService_CreateTask(b *testing.B) {
 	underTest := task.NewTaskService(mockTaskRepository)
 
 	newTask := task.Task{
-		Name:      "new task",
+		TaskName:      "new task",
 		Completed: false,
 	}
 
@@ -217,7 +217,7 @@ func BenchmarkTaskService_UpdateTaskById(b *testing.B) {
 
 	updatedTask := tasks[0]
 	updatedTask.Completed = true
-	updatedTask.Name = "Read a book"
+	updatedTask.TaskName = "Read a book"
 
 	mockTaskRepository.On("UpdateTaskById", id, mock.Anything).Return(updatedTask, nil)
 

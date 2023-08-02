@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+option go_package="./task/pb";
+
+message Task {
+  int64 id = 1;
+  string taskName = 2;
+  bool completed = 3;
+  int64 userId = 4;
+}
+
+message GetAllTasksRequest {}
+message GetAllTasksResponse { repeated Task tasks = 1;}
+
+message GetTaskByIdRequest {int64 id = 1;}
+message GetTaskByIdResponse {Task task = 1;}
+
+
+message CreateTaskRequest { 
+  string taskName = 2;
+  bool completed = 3;
+  int64 userId = 4;}
+message CreateTaskResponse {Task task = 1;}
+
+message UpdateTaskRequest { 
+  int64 id = 1;
+  string taskName = 2;
+  bool completed = 3;
+  int64 userId = 4;}
+message UpdateTaskResponse {Task task = 1;}
+
+
+message DeleteTaskRequest {int64 id = 1;}
+message DeleteTaskResponse {}
+
+
+service TaskService{
+  rpc  GetAllTasks(GetAllTasksRequest) returns (GetAllTasksResponse){}
+  rpc  GetTaskById(GetTaskByIdRequest) returns (GetTaskByIdResponse){}
+  rpc  CreateTask(CreateTaskRequest) returns (CreateTaskResponse){}
+  rpc  UpdateTask(UpdateTaskRequest) returns (UpdateTaskResponse){}
+  rpc  DeleteTask(DeleteTaskRequest) returns (DeleteTaskResponse){}
+}

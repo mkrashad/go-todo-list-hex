@@ -3,7 +3,7 @@
 package mocks
 
 import (
-	task "github.com/mkrashad/go-todo/internal/task"
+	task "github.com/mkrashad/go-todo/task/internal"
 	mock "github.com/stretchr/testify/mock"
 )
 
