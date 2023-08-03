@@ -14,7 +14,7 @@ import (
 var DB *gorm.DB
 
 func LoadEnvVariables() {
-	err := godotenv.Load()
+	err := godotenv.Load("/home/rashad/workspace/github.com/mkrashad/go-todo/user/.env")
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
@@ -44,7 +44,7 @@ func ConnectToDB() {
 }
 
 func SyncDB() {
-	err := DB.AutoMigrate(&user.User{})
+	err := DB.AutoMigrate(&internal.User{})
 	if err != nil {
 		log.Fatal("Could not migrate:", err)
 	}

@@ -1,4 +1,4 @@
-package api
+package handler
 
 import (
 	"bytes"
@@ -10,9 +10,8 @@ import (
 	"testing"
 
 	"github.com/gin-gonic/gin"
-	"github.com/mkrashad/go-todo/internal/task"
-	taskMocks "github.com/mkrashad/go-todo/internal/task/mocks"
-	userMocks "github.com/mkrashad/go-todo/internal/user/mocks"
+	"github.com/mkrashad/go-todo/task/internal"
+	taskMocks "github.com/mkrashad/go-todo/task/internal/mocks"
 	"github.com/stretchr/testify/suite"
 )
 
@@ -20,7 +19,6 @@ type TaskHandlerIntegrationTestSuite struct {
 	suite.Suite
 	underTest       *TaskHandler
 	mockTaskService *taskMocks.Service
-	mockUserService *userMocks.Service
 	router          *gin.Engine
 }
 
@@ -28,13 +26,13 @@ func TestTaskHandlerIntegrationTestSuite(t *testing.T) {
 	suite.Run(t, &TaskHandlerIntegrationTestSuite{})
 }
 
-var tasks = []task.Task{
+var tasks = []internal.Task{
 	{
-		Name:      "Study for exam",
+		TaskName:      "Study for exam",
 		Completed: false,
 	},
 	{
-		Name:      "Play soccer",
+		TaskName:      "Play soccer",
 		Completed: true,
 	},
 }
@@ -61,7 +59,7 @@ func (ts *TaskHandlerIntegrationTestSuite) TestGetAllTasks() {
 
 	response, _ := io.ReadAll(w.Body)
 	// then
-	var responseTasks []task.Task
+	var responseTasks []internal.Task
 	err := json.Unmarshal(response, &responseTasks)
 	if err != nil {
 		ts.Fail("Failed to convert", err)
@@ -81,7 +79,7 @@ func (ts *TaskHandlerIntegrationTestSuite) TestGetTaskBy_ValidId() {
 	ts.router.ServeHTTP(w, req)
 	response, _ := io.ReadAll(w.Body)
 	// then
-	var responseTask task.Task
+	var responseTask internal.Task
 	err := json.Unmarshal(response, &responseTask)
 	if err != nil {
 		ts.Fail("Failed to convert")
@@ -94,7 +92,7 @@ func (ts *TaskHandlerIntegrationTestSuite) TestGetTaskBy_ValidId() {
 func (ts *TaskHandlerIntegrationTestSuite) TestGetTaskById_InvalidId() {
 	// given
 	var id uint64 = 9999
-	ts.mockTaskService.On("GetTaskById", id).Once().Return(task.Task{}, errors.New("not found"))
+	ts.mockTaskService.On("GetTaskById", id).Once().Return(internal.Task{}, errors.New("not found"))
 	// when
 	req, _ := http.NewRequest("GET", "/tasks/9999", nil)
 	w := httptest.NewRecorder()
@@ -108,7 +106,7 @@ func (ts *TaskHandlerIntegrationTestSuite) TestUpdateTaskById_ValidBody() {
 	// given
 	var id uint64 = 1
 	updatedTask := tasks[0]
-	updatedTask.Name = "updated"
+	updatedTask.TaskName = "updated"
 	updatedTask.Completed = true
 	jsonValue, _ := json.Marshal(updatedTask)
 	ts.mockTaskService.On("UpdateTaskById", id, updatedTask).Once().Return(updatedTask, nil)
@@ -118,7 +116,7 @@ func (ts *TaskHandlerIntegrationTestSuite) TestUpdateTaskById_ValidBody() {
 	ts.router.ServeHTTP(w, req)
 	response, _ := io.ReadAll(w.Body)
 	// then
-	var responseTask task.Task
+	var responseTask internal.Task
 	err := json.Unmarshal(response, &responseTask)
 	if err != nil {
 		ts.Fail("Failed to convert: ", string(response))
@@ -137,7 +135,7 @@ func (ts *TaskHandlerIntegrationTestSuite) TestUpdateTaskById_InvalidBody() {
 	ts.router.ServeHTTP(w, req)
 	response, _ := io.ReadAll(w.Body)
 	// then
-	var responseTask task.Task
+	var responseTask internal.Task
 	err := json.Unmarshal(response, &responseTask)
 	if err != nil {
 		ts.Fail("Failed to convert: ", string(response))
@@ -161,8 +159,8 @@ func (ts *TaskHandlerIntegrationTestSuite) TestDeleteTaskById_ValidId() {
 
 func (ts *TaskHandlerIntegrationTestSuite) TestCreateTask_ValidBody() {
 	// given
-	newTask := task.Task{
-		Name:      "Study for exam",
+	newTask := internal.Task{
+		TaskName:      "Study for exam",
 		Completed: true,
 	}
 	jsonValue, _ := json.Marshal(newTask)
@@ -173,7 +171,7 @@ func (ts *TaskHandlerIntegrationTestSuite) TestCreateTask_ValidBody() {
 	ts.router.ServeHTTP(w, req)
 	response, _ := io.ReadAll(w.Body)
 	// then
-	var responseTask task.Task
+	var responseTask internal.Task
 	err := json.Unmarshal(response, &responseTask)
 	if err != nil {
 		ts.Fail("Failed to convert: ", string(response))

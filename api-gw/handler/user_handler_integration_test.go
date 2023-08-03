@@ -1,4 +1,4 @@
-package api
+package handler
 
 import (
 	"bytes"
@@ -9,9 +9,8 @@ import (
 	"testing"
 
 	"github.com/gin-gonic/gin"
-	"github.com/mkrashad/go-todo/internal/task"
-	"github.com/mkrashad/go-todo/internal/user"
-	userMocks "github.com/mkrashad/go-todo/internal/user/mocks"
+	"github.com/mkrashad/go-todo/user/internal"
+	userMocks "github.com/mkrashad/go-todo/user/internal/mocks"
 	"github.com/stretchr/testify/suite"
 )
 
@@ -37,18 +36,12 @@ func TestUserHandlerIntegrationTestSuite(t *testing.T) {
 	suite.Run(t, &UserHandlerIntegrationTestSuite{})
 }
 
-var users = []user.User{
+var users = []internal.User{
 	{
 
 		FirstName: "John",
 		LastName:  "Doe",
 		Email:     "john.doe@mail.com",
-		Tasks: []task.Task{
-			{
-				Name:      "Study for exam",
-				Completed: false,
-			},
-		},
 	},
 	{
 		FirstName: "Adam",
@@ -67,7 +60,7 @@ func (ts *UserHandlerIntegrationTestSuite) TestGetAllUsers() {
 
 	response, _ := io.ReadAll(w.Body)
 	// then
-	var responseUsers []user.User
+	var responseUsers []internal.User
 	err := json.Unmarshal(response, &responseUsers)
 	if err != nil {
 		ts.Fail("Failed to convert")
@@ -88,7 +81,7 @@ func (ts *UserHandlerIntegrationTestSuite) TestGetUserById_ValidId() {
 
 	response, _ := io.ReadAll(w.Body)
 	// then
-	var responseUser user.User
+	var responseUser internal.User
 	err := json.Unmarshal(response, &responseUser)
 	if err != nil {
 		ts.Fail("Failed to convert")
@@ -133,16 +126,10 @@ func (ts *UserHandlerIntegrationTestSuite) TestDeleteUserById_InvalidId() {
 
 func (ts *UserHandlerIntegrationTestSuite) TestCreateUser_Valid() {
 	// given
-	newUser := user.User{
+	newUser := internal.User{
 		FirstName: "Bob",
 		LastName:  "White",
 		Email:     "bob@mail.com",
-		Tasks: []task.Task{
-			{
-				Name:      "Study for exam",
-				Completed: true,
-			},
-		},
 	}
 	jsonValue, _ := json.Marshal(newUser)
 	ts.mockUserService.On("CreateUser").Once().Return(newUser, nil)
@@ -153,7 +140,7 @@ func (ts *UserHandlerIntegrationTestSuite) TestCreateUser_Valid() {
 
 	response, _ := io.ReadAll(w.Body)
 	// then
-	var responseUser user.User
+	var responseUser internal.User
 	err := json.Unmarshal(response, &responseUser)
 	if err != nil {
 		ts.Fail("Failed to convert")

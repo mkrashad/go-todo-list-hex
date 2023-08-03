@@ -2,7 +2,7 @@ package api
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/mkrashad/go-todo/api/metrics"
+	"github.com/mkrashad/go-todo/api-gw/metrics"
 )
 
 func Router(taskHandler *TaskHandler, userHandler *UserHandler) *gin.Engine {

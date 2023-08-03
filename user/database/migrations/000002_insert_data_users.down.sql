@@ -1,1 +1,1 @@
--- TRUNCATE public.users;
+TRUNCATE public.users;

@@ -1,4 +1,4 @@
-package task_test
+package internal_test
 
 import (
 	"errors"
@@ -12,11 +12,11 @@ import (
 
 type TaskServiceUnitTestSuite struct {
 	suite.Suite
-	underTest          task.Service
+	underTest          internal.Service
 	mockTaskRepository *mocks.Repository
 }
 
-var tasks = []task.Task{
+var tasks = []internal.Task{
 	{
 		TaskName:      "Study for exam",
 		Completed: false,
@@ -35,7 +35,7 @@ func TestTaskServiceUnitTestSuite(t *testing.T) {
 
 func (ts *TaskServiceUnitTestSuite) SetupSuite() {
 	ts.mockTaskRepository = new(mocks.Repository)
-	ts.underTest = task.NewTaskService(ts.mockTaskRepository)
+	ts.underTest = internal.NewTaskService(ts.mockTaskRepository)
 }
 
 func (ts *TaskServiceUnitTestSuite) TestGetAllTasks() {
@@ -67,7 +67,7 @@ func (ts *TaskServiceUnitTestSuite) TestGetTaskById_ValidId() {
 
 func (ts *TaskServiceUnitTestSuite) TestGetTaskById_InvalidId() {
 	// given
-	ts.mockTaskRepository.On("GetTaskById", id).Once().Return(task.Task{}, errors.New("not found"))
+	ts.mockTaskRepository.On("GetTaskById", id).Once().Return(internal.Task{}, errors.New("not found"))
 
 	// when
 	result, err := ts.underTest.GetTaskById(id)
@@ -80,7 +80,7 @@ func (ts *TaskServiceUnitTestSuite) TestGetTaskById_InvalidId() {
 
 func (ts *TaskServiceUnitTestSuite) TestCreateTaskValid() {
 	// given
-	newTask := task.Task{
+	newTask := internal.Task{
 		TaskName:      "new task",
 		Completed: false,
 	}
@@ -97,7 +97,7 @@ func (ts *TaskServiceUnitTestSuite) TestCreateTaskValid() {
 
 func (ts *TaskServiceUnitTestSuite) TestCreateTaskInValid() {
 	// given
-	newTask := task.Task{
+	newTask := internal.Task{
 		TaskName:      "new task",
 		Completed: false,
 	}
@@ -132,7 +132,7 @@ func (ts *TaskServiceUnitTestSuite) TestUpdateTaskById_InvalidUpdate() {
 	updatedTask := tasks[0]
 	updatedTask.Completed = true
 	updatedTask.TaskName = "Read a book"
-	ts.mockTaskRepository.On("UpdateTaskById", id, mock.Anything).Once().Return(task.Task{}, errors.New("error"))
+	ts.mockTaskRepository.On("UpdateTaskById", id, mock.Anything).Once().Return(internal.Task{}, errors.New("error"))
 
 	// when
 	result, err := ts.underTest.UpdateTaskById(id, updatedTask)
@@ -171,7 +171,7 @@ func (ts *TaskServiceUnitTestSuite) TestDeleteTaskById_Invalid() {
 // Benchmarks
 func BenchmarkTaskService_GetAllTasks(b *testing.B) {
 	mockTaskRepository := new(mocks.Repository)
-	underTest := task.NewTaskService(mockTaskRepository)
+	underTest := internal.NewTaskService(mockTaskRepository)
 
 	mockTaskRepository.On("GetAllTasks").Return(tasks)
 	b.ResetTimer()
@@ -183,7 +183,7 @@ func BenchmarkTaskService_GetAllTasks(b *testing.B) {
 
 func BenchmarkTaskService_GetTaskById(b *testing.B) {
 	mockTaskRepository := new(mocks.Repository)
-	underTest := task.NewTaskService(mockTaskRepository)
+	underTest := internal.NewTaskService(mockTaskRepository)
 
 	mockTaskRepository.On("GetTaskById", id).Return(tasks[0], nil)
 	b.ResetTimer()
@@ -195,9 +195,9 @@ func BenchmarkTaskService_GetTaskById(b *testing.B) {
 
 func BenchmarkTaskService_CreateTask(b *testing.B) {
 	mockTaskRepository := new(mocks.Repository)
-	underTest := task.NewTaskService(mockTaskRepository)
+	underTest := internal.NewTaskService(mockTaskRepository)
 
-	newTask := task.Task{
+	newTask := internal.Task{
 		TaskName:      "new task",
 		Completed: false,
 	}
@@ -213,7 +213,7 @@ func BenchmarkTaskService_CreateTask(b *testing.B) {
 
 func BenchmarkTaskService_UpdateTaskById(b *testing.B) {
 	mockTaskRepository := new(mocks.Repository)
-	underTest := task.NewTaskService(mockTaskRepository)
+	underTest := internal.NewTaskService(mockTaskRepository)
 
 	updatedTask := tasks[0]
 	updatedTask.Completed = true
@@ -230,7 +230,7 @@ func BenchmarkTaskService_UpdateTaskById(b *testing.B) {
 
 func BenchmarkTaskService_DeleteTaskById(b *testing.B) {
 	mockTaskRepository := new(mocks.Repository)
-	underTest := task.NewTaskService(mockTaskRepository)
+	underTest := internal.NewTaskService(mockTaskRepository)
 
 	mockTaskRepository.On("DeleteTaskById", id).Once().Return(nil)
 

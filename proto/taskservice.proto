@@ -27,7 +27,7 @@ message UpdateTaskRequest {
   string taskName = 2;
   bool completed = 3;
   int64 userId = 4;}
-message UpdateTaskResponse {Task task = 1;}
+message UpdateTaskResponse {int64 id = 1;}
 
 
 message DeleteTaskRequest {int64 id = 1;}

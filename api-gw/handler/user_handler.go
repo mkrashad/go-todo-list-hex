@@ -1,4 +1,4 @@
-package api
+package handler
 
 import (
 	"log"
@@ -6,19 +6,19 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/mkrashad/go-todo/internal/user"
+	"github.com/mkrashad/go-todo/api-gw/pb"
 )
 
 type UserHandler struct {
-	userService user.Service
+	userClient pb.UserServiceClient
 }
 
-func NewUserHandler(userService user.Service) *UserHandler {
-	return &UserHandler{userService}
+func NewUserHandler(userClient pb.UserServiceClient) *UserHandler {
+	return &UserHandler{userClient}
 }
 
 func (uh *UserHandler) GetAllUsers(c *gin.Context) {
-	users := uh.userService.GetAllUsers()
+	users, _ := uh.userClient.GetAllUsers(c.Request.Context(), &pb.GetAllUsersRequest{})
 	c.JSON(200, users)
 }
 
@@ -29,7 +29,7 @@ func (uh *UserHandler) GetUserById(c *gin.Context) {
 		return
 	}
 
-	user, err := uh.userService.GetUserById(id)
+	user, err := uh.userClient.GetUserById(c.Request.Context(), &pb.GetUserByIdRequest{Id: int64(id)})
 	if err == nil {
 		c.JSON(200, user)
 	}
@@ -38,14 +38,14 @@ func (uh *UserHandler) GetUserById(c *gin.Context) {
 }
 
 func (uh *UserHandler) CreateUser(c *gin.Context) {
-	var input user.User
+	var input pb.CreateUserRequest
 
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	user, err := uh.userService.CreateUser(input)
+	user, err := uh.userClient.CreateUser(c.Request.Context(), &input)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -55,7 +55,7 @@ func (uh *UserHandler) CreateUser(c *gin.Context) {
 }
 
 func (uh *UserHandler) UpdateUserById(c *gin.Context) {
-	var input user.User
+	var input pb.UpdateUserRequest
 	c.Bind(&input)
 
 	if err := c.ShouldBindJSON(&input); err != nil {
@@ -63,9 +63,9 @@ func (uh *UserHandler) UpdateUserById(c *gin.Context) {
 		return
 	}
 
-	id, _ := strconv.ParseUint(c.Param("id"), 10, 64)
+	// id, _ := strconv.ParseUint(c.Param("id"), 10, 64)
 
-	tasks, err := uh.userService.UpdateUserById(id, input)
+	tasks, err := uh.userClient.UpdateUser(c.Request.Context(), &input)
 	if err != nil {
 		c.Status(404)
 		return
@@ -82,7 +82,7 @@ func (uh *UserHandler) DeleteUserById(c *gin.Context) {
 		return
 	}
 
-	uh.userService.DeleteUserById(id)
+	uh.userClient.DeleteUser(c.Request.Context(), &pb.DeleteUserRequest{Id: int64(id)})
 
 	c.Status(204)
 }

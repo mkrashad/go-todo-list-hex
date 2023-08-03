@@ -21,7 +21,7 @@ func main() {
 	taskService := task.NewTaskService(taskRepository)
 	srv := server.NewServer(taskService)
 
-	lis, err := net.Listen("tcp", ":8081")
+	lis, err := net.Listen("tcp", ":8082")
 	if err != nil {
 		log.Fatalf("Can't create listen: %s", err)
 	}

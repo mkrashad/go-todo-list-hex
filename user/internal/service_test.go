@@ -1,4 +1,4 @@
-package user_test
+package internal_test
 
 import (
 	"errors"
@@ -17,11 +17,11 @@ import (
 
 type UserServiceUnitTestSuite struct {
 	suite.Suite
-	underTest          user.Service
+	underTest          internal.Service
 	mockUserRepository *mocks.Repository
 }
 
-var users = []user.User{
+var users = []internal.User{
 	{
 
 		FirstName: "John",
@@ -42,7 +42,7 @@ func TestUserServiceUnitTestSuite(t *testing.T) {
 
 func (ts *UserServiceUnitTestSuite) SetupSuite() {
 	ts.mockUserRepository = new(mocks.Repository)
-	ts.underTest = user.NewUserService(ts.mockUserRepository)
+	ts.underTest = internal.NewUserService(ts.mockUserRepository)
 }
 
 func (ts *UserServiceUnitTestSuite) TestGetAllUsers() {
@@ -70,7 +70,7 @@ func (ts *UserServiceUnitTestSuite) TestGetUserById_ValidId() {
 func (ts *UserServiceUnitTestSuite) TestGetUserById_InvalidId() {
 	// given
 	var id uint64 = 9999
-	ts.mockUserRepository.On("GetUserById", id).Once().Return(user.User{}, errors.New("not found"))
+	ts.mockUserRepository.On("GetUserById", id).Once().Return(internal.User{}, errors.New("not found"))
 	// when
 	result, err := ts.underTest.GetUserById(id)
 	// then
@@ -81,7 +81,7 @@ func (ts *UserServiceUnitTestSuite) TestGetUserById_InvalidId() {
 
 func (ts *UserServiceUnitTestSuite) TestCreateUserValid() {
 	// given
-	newUser := user.User{
+	newUser := internal.User{
 		FirstName: "Jane",
 		LastName:  "Doe",
 		Email:     "jane.doe@mail.com",
@@ -97,12 +97,12 @@ func (ts *UserServiceUnitTestSuite) TestCreateUserValid() {
 
 func (ts *UserServiceUnitTestSuite) TestCreateUserInValid() {
 	// given
-	newUser := user.User{
+	newUser := internal.User{
 		FirstName: "Jane",
 		LastName:  "Doe",
 		Email:     "jane.doe@mail.com",
 	}
-	ts.mockUserRepository.On("CreateUser", newUser).Once().Return(user.User{}, errors.New("error"))
+	ts.mockUserRepository.On("CreateUser", newUser).Once().Return(internal.User{}, errors.New("error"))
 	// when
 	_, err := ts.underTest.CreateUser(newUser)
 
@@ -128,7 +128,7 @@ func (ts *UserServiceUnitTestSuite) TestUpdateUserById_ValidUpdate() {
 func (ts *UserServiceUnitTestSuite) TestUpdateUserById_InvalidUpdate() {
 	// given
 	updatedUser := users[0]
-	ts.mockUserRepository.On("UpdateUserById", id, updatedUser).Once().Return(user.User{}, errors.New("error"))
+	ts.mockUserRepository.On("UpdateUserById", id, updatedUser).Once().Return(internal.User{}, errors.New("error"))
 	// when
 	result, err := ts.underTest.UpdateUserById(id, updatedUser)
 	// then
@@ -161,7 +161,7 @@ func (ts *UserServiceUnitTestSuite) TestDeleteUserById_Invalid() {
 
 func BenchmarkTaskService_GetAllUsers(b *testing.B) {
 	mockUserRepository := new(mocks.Repository)
-	underTest := user.NewUserService(mockUserRepository)
+	underTest := internal.NewUserService(mockUserRepository)
 
 	mockUserRepository.On("GetAllUsers").Return(users)
 	b.ResetTimer()
@@ -173,7 +173,7 @@ func BenchmarkTaskService_GetAllUsers(b *testing.B) {
 
 func BenchmarkTaskService_GetUserById(b *testing.B) {
 	mockUserRepository := new(mocks.Repository)
-	underTest := user.NewUserService(mockUserRepository)
+	underTest := internal.NewUserService(mockUserRepository)
 
 	mockUserRepository.On("GetUserById", id).Return(users[0], nil)
 	b.ResetTimer()
@@ -185,9 +185,9 @@ func BenchmarkTaskService_GetUserById(b *testing.B) {
 
 func BenchmarkTaskService_CreateUser(b *testing.B) {
 	mockUserRepository := new(mocks.Repository)
-	underTest := user.NewUserService(mockUserRepository)
+	underTest := internal.NewUserService(mockUserRepository)
 
-	newUser := user.User{
+	newUser := internal.User{
 		FirstName: "Jane",
 		LastName:  "Doe",
 		Email:     "jane.doe@mail.com",
@@ -202,7 +202,7 @@ func BenchmarkTaskService_CreateUser(b *testing.B) {
 
 func BenchmarkUpdateUserById(b *testing.B) {
 	mockUserRepository := new(mocks.Repository)
-	underTest := user.NewUserService(mockUserRepository)
+	underTest := internal.NewUserService(mockUserRepository)
 
 	updatedUser := users[0]
 	updatedUser.FirstName = "Edward"
@@ -217,7 +217,7 @@ func BenchmarkUpdateUserById(b *testing.B) {
 
 func BenchmarkDeleteUserById(b *testing.B) {
 	mockUserRepository := new(mocks.Repository)
-	underTest := user.NewUserService(mockUserRepository)
+	underTest := internal.NewUserService(mockUserRepository)
 
 	mockUserRepository.On("DeleteUserById", id).Return(nil)
 	b.ResetTimer()

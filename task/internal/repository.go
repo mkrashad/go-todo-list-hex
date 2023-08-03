@@ -1,4 +1,4 @@
-package task
+package internal
 
 import (
 	"gorm.io/gorm"
