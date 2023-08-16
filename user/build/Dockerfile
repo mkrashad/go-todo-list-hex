@@ -10,7 +10,7 @@ RUN go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate
 
 COPY . .
 
-RUN go build -o golang-todo-user cmd/main.go
+RUN go build -o app-golang-user cmd/main.go
 
 FROM alpine:latest
 RUN apk --no-cache add ca-certificates

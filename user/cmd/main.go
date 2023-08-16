@@ -1,24 +1,31 @@
 package main
 
 import (
+	"context"
 	"log"
 	"net"
-
-	database "github.com/mkrashad/go-todo/user/database"
+	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
+	grpc_zap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
 	"github.com/mkrashad/go-todo/user/cmd/server"
+	database "github.com/mkrashad/go-todo/user/database"
 	user "github.com/mkrashad/go-todo/user/internal"
 	"github.com/mkrashad/go-todo/user/pb"
+	"go.uber.org/zap"
 	"google.golang.org/grpc"
+	"github.com/mkrashad/go-todo/user/ctxutils"
+	"github.com/mkrashad/go-todo/user/interceptor"
 )
 
+var ctx context.Context
 func init() {
-	database.LoadEnvVariables()
+	ctx = context.Background()
+	ctx = ctxutils.SetLogger(ctx)
+
 	database.ConnectToDB()
-	database.SyncDB()
 }
 
+
 func main() {
-	// Users
 	userRepository := user.NewUserRepository(database.DB)
 	userService := user.NewUserService(userRepository)
 	srv := server.NewServer(userService)
@@ -29,10 +36,21 @@ func main() {
 		log.Fatalf("Can't create listen: %s", err)
 	}
 
-	s := grpc.NewServer()
+	grpcLogger, err := zap.NewProduction()
+	defer grpcLogger.Sync()
 
+	opts := []grpc.ServerOption{
+		grpc.UnaryInterceptor(
+			grpc_middleware.ChainUnaryServer(
+				grpc_zap.UnaryServerInterceptor(grpcLogger),
+				interceptor.ContextToZapFields(),
+			)),
+	}
+
+
+	s := grpc.NewServer(opts...)
 	pb.RegisterUserServiceServer(s, srv)
 	if err := s.Serve(lis); err != nil {
-		log.Fatalf("failed to serve: %v", err)
+		ctxutils.GetSystemLogger(ctx).Sugar().Fatal("failed to serve: ", err)
 	}
 }

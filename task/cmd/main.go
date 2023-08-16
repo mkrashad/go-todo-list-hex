@@ -12,9 +12,7 @@ import (
 
 
 func init() {
-	database.LoadEnvVariables()
 	database.ConnectToDB()
-	database.SyncDB()
 }
 func main() {
 	taskRepository := task.NewTaskRepository(database.DB)

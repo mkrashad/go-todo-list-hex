@@ -57,6 +57,8 @@ func (s *server) CreateUser(ctx context.Context, req *pb.CreateUserRequest) (*pb
 		FirstName: req.Firstname,
 		LastName:  req.Lastname,
 		Email:     req.Email,
+		UserName:  req.Username,
+		Password:  req.Password,
 	}
 	t, err := s.service.CreateUser(User)
 	if err != nil {
@@ -71,6 +73,8 @@ func (s *server) UpdateUser(ctx context.Context, req *pb.UpdateUserRequest) (*pb
 		FirstName: req.Firstname,
 		LastName:  req.Lastname,
 		Email:     req.Email,
+		UserName:  req.Username,
+		Password:  req.Password,
 	}
 	t, err := s.service.UpdateUserById(uint64(req.Id), User)
 	if err != nil {
@@ -92,7 +96,7 @@ func toPbUser(u internal.User) *pb.User {
 		Firstname: u.FirstName,
 		Lastname:  u.LastName,
 		Email:     u.Email,
-		Username: u.Username,
-		Password: u.Password,
+		Username:  u.UserName,
+		Password:  u.Password,
 	}
 }

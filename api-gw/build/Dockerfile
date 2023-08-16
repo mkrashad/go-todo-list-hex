@@ -6,7 +6,7 @@ COPY go.mod go.sum ./
 RUN go mod download
 
 COPY . .
-RUN go build -o golang-academy-api-gw cmd/main.go
+RUN go build -o api-gw-golang-todo cmd/main.go
 
 FROM alpine:latest
 RUN apk --no-cache add ca-certificates
@@ -14,4 +14,4 @@ RUN apk --no-cache add ca-certificates
 COPY --from=builder /app /
 
 EXPOSE 8080
-CMD ["./golang-academy-api-gw"]
+CMD ["./api-gw-golang-todo"]

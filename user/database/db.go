@@ -4,21 +4,12 @@ import (
 	"fmt"
 	"log"
 	"os"
-
-	"github.com/joho/godotenv"
-	"github.com/mkrashad/go-todo/user/internal"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
 var DB *gorm.DB
 
-func LoadEnvVariables() {
-	err := godotenv.Load("/home/rashad/workspace/github.com/mkrashad/go-todo/user/.env")
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
-}
 
 func ConnectToDB() {
 	var err error
@@ -41,12 +32,4 @@ func ConnectToDB() {
 	if err != nil {
 		log.Fatal("Failed to connect to database!")
 	}
-}
-
-func SyncDB() {
-	err := DB.AutoMigrate(&internal.User{})
-	if err != nil {
-		log.Fatal("Could not migrate:", err)
-	}
-	fmt.Println("Database migrated succesfully")
 }

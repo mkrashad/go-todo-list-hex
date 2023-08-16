@@ -5,7 +5,6 @@ import (
 	"log"
 	"os"
 
-	"github.com/joho/godotenv"
 	"github.com/mkrashad/go-todo/task/internal"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -13,12 +12,6 @@ import (
 
 var DB *gorm.DB
 
-func LoadEnvVariables() {
-	err := godotenv.Load("/home/rashad/workspace/github.com/mkrashad/go-todo/task/.env")
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
-}
 
 func ConnectToDB() {
 	var err error

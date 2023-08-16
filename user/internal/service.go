@@ -6,7 +6,7 @@ import (
 
 //go:generate mockery --name Service
 type Service interface {
-	GetByUserNameAndPasword(username, password string)(User, error)
+	GetByUserNameAndPasword(userName, password string)(User, error)
 	GetAllUsers() []User
 	GetUserById(id uint64) (User, error)
 	CreateUser(user User) (User, error)
@@ -18,12 +18,12 @@ type userService struct {
 	repository Repository
 }
 
-func (us userService) GetByUserNameAndPasword(username, password string)(User, error) {
-	user, err := us.repository.FindUserNameAndPassword(username, password)
+func (us userService) GetByUserNameAndPasword(userName, password string)(User, error) {
+	user, err := us.repository.FindUserNameAndPassword(userName, password)
 	if err != nil {
 		log.Printf("Error while fetching user by username and password: %s\n", err)
 	}
-	log.Printf("Fetched user by username and password: %s\n", username)
+	log.Printf("Fetched user by username and password: %s\n", userName)
 	return user, err
 }
 
