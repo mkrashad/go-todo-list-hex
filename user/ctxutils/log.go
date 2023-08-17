@@ -2,6 +2,7 @@ package ctxutils
 
 import (
 	"context"
+
 	"github.com/grpc-ecosystem/go-grpc-middleware/logging/zap/ctxzap"
 	"go.uber.org/zap"
 )
@@ -26,4 +27,3 @@ func GetSystemLogger(ctx context.Context) *zap.Logger {
 func GetRequestLogger(ctx context.Context) *zap.Logger {
 	return ctxzap.Extract(ctx)
 }
-

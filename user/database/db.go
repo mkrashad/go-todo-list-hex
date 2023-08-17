@@ -1,17 +1,19 @@
 package database
 
 import (
+	"context"
 	"fmt"
-	"log"
 	"os"
+
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+
+	"github.com/mkrashad/go-todo/user/ctxutils"
 )
 
 var DB *gorm.DB
 
-
-func ConnectToDB() {
+func ConnectToDB(ctx context.Context) {
 	var err error
 	DbConfig := struct {
 		Host     string
@@ -30,6 +32,6 @@ func ConnectToDB() {
 	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
 	if err != nil {
-		log.Fatal("Failed to connect to database!")
+		ctxutils.GetRequestLogger(ctx).Fatal("Failed to connect to database!")
 	}
 }

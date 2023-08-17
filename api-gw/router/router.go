@@ -12,6 +12,7 @@ func NewRouter(taskHandler handler.TaskHandler, userHandler handler.UserHandler,
 	metrics.PrometheusMetrics(r)
 
 	r.Use(middleware.RequestId())
+	r.Use(middleware.Logging())
 
 	protected := r.Group("/api")
 	protected.Use(middleware.JwtAuthMiddleware())
