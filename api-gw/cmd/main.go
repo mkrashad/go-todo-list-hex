@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/mkrashad/go-todo/api-gw/handler"
+	"github.com/mkrashad/go-todo/api-gw/interceptor"
 	"github.com/mkrashad/go-todo/api-gw/pb"
 	"github.com/mkrashad/go-todo/api-gw/router"
 	"google.golang.org/grpc"
@@ -11,13 +12,13 @@ import (
 )
 
 func main() {
-	tc, err := grpc.Dial("app-task:8080", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	tc, err := grpc.Dial("app-task:8082", grpc.WithTransportCredentials(insecure.NewCredentials()), grpc.WithUnaryInterceptor(interceptor.ContextPropagation()))
 	if err != nil {
 		log.Fatal("Could not connect to task microservice: ", err)
 	}
 	taskClient := pb.NewTaskServiceClient(tc)
 
-	uc, err := grpc.Dial("app-user:8080", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	uc, err := grpc.Dial("app-user:8081", grpc.WithTransportCredentials(insecure.NewCredentials()), grpc.WithUnaryInterceptor(interceptor.ContextPropagation()))
 	if err != nil {
 		log.Fatal("Could not connect to user microservice: ", err)
 	}

@@ -1,0 +1,16 @@
+{
+      "configurations": [
+      {
+            "name": "Connect to server",
+            "type": "go",
+            "request": "attach",
+            // "debugAdapter": "dlv-dap",
+            "mode": "remote",
+            "remotePath": "/app",
+            // "remotePath": "/app/app-golang-user",
+            "port": 40000,
+            "host": "127.0.0.1",
+            "trace": "log",
+	      "logOutput": "rpc"
+      }]
+}

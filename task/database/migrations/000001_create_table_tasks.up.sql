@@ -14,7 +14,3 @@ CREATE TABLE
             completed BOOL,
             user_id BIGINT
     );
-
-ALTER TABLE public.tasks
-ADD
-    CONSTRAINT fk_tasks_users FOREIGN KEY (user_id) REFERENCES public.users (id);
