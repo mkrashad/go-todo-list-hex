@@ -12,7 +12,7 @@ COPY . .
 
 # RUN go build -o app-golang-task cmd/main.go
 RUN CGO_ENABLED=0 go install -ldflags "-s -w -extldflags '-static'" github.com/go-delve/delve/cmd/dlv@latest
-RUN CGO_ENABLED=0 go build -gcflags "all=-N -l" -o app-golang-user cmd/main.go
+RUN CGO_ENABLED=0 go build -gcflags "all=-N -l" -o app-golang-task cmd/main.go
 
 
 FROM alpine:latest

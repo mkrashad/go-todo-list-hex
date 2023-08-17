@@ -10,7 +10,7 @@ RUN go mod download
 COPY . .
 # RUN go build -o api-gw-golang-todo cmd/main.go
 RUN CGO_ENABLED=0 go install -ldflags "-s -w -extldflags '-static'" github.com/go-delve/delve/cmd/dlv@latest
-RUN CGO_ENABLED=0 go build -gcflags "all=-N -l" -o app-golang-user cmd/main.go
+RUN CGO_ENABLED=0 go build -gcflags "all=-N -l" -o api-gw-golang-todo cmd/main.go
 
 FROM alpine:latest
 RUN apk --no-cache add ca-certificates
