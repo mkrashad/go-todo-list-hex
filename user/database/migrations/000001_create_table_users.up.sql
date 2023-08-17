@@ -4,9 +4,9 @@ CREATE TABLE IF NOT EXISTS public.users
     created_at TIMESTAMP WITH TIME ZONE,
     updated_at TIMESTAMP WITH TIME ZONE,
     deleted_at TIMESTAMP WITH TIME ZONE,
-    firstname   VARCHAR(300),
-    lastname   VARCHAR(300),
+    first_name   VARCHAR(300),
+    last_name   VARCHAR(300),
     email      VARCHAR(300),
-    username      VARCHAR(300),
+    user_name      VARCHAR(300),
     password      VARCHAR(300)
 );

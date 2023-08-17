@@ -6,7 +6,7 @@ import (
 
 //go:generate mockery --name Repository
 type Repository interface {
-	FindUserNameAndPassword(userName, password string)(User, error)
+	FindUserNameAndPassword(userName, password string) (User, error)
 	GetAllUsers() []User
 	GetUserById(id uint64) (User, error)
 	CreateUser(user User) (User, error)
@@ -22,9 +22,9 @@ func NewUserRepository(db *gorm.DB) Repository {
 	return &userRepository{DB: db}
 }
 
-func (tr userRepository) FindUserNameAndPassword(userName, password string) (User, error){
-	var user User 
-	result := tr.DB.Where("username =? AND password =?", userName, password).First(&user)
+func (tr userRepository) FindUserNameAndPassword(userName, password string) (User, error) {
+	var user User
+	result := tr.DB.Where("user_name =? AND password =?", userName, password).First(&user)
 	return user, result.Error
 }
 
@@ -57,5 +57,3 @@ func (tr userRepository) DeleteUserById(id uint64) error {
 	result := tr.DB.Delete(&User{}, id)
 	return result.Error
 }
-
-
