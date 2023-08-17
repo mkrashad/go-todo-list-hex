@@ -2,9 +2,10 @@ package auth
 
 import (
 	"errors"
+	"time"
+
 	"github.com/golang-jwt/jwt"
 	"github.com/mkrashad/go-todo/api-gw/pb"
-	"time"
 )
 
 func GenerateToken(user *pb.User) (string, error) {
@@ -13,7 +14,7 @@ func GenerateToken(user *pb.User) (string, error) {
 	claims := token.Claims.(jwt.MapClaims)
 	claims["uid"] = user.Id
 	claims["iat"] = timeNow.Unix()
-	claims["exp"] = timeNow.Add(time.Minute * 10).Unix()
+	claims["exp"] = timeNow.Add(time.Hour * 24).Unix()
 
 	tokenString, err := token.SignedString([]byte("secret"))
 	if err != nil {
@@ -47,4 +48,3 @@ func ParseToken(tokenString string) (jwt.MapClaims, error) {
 	}
 	return nil, errors.New("could not extract claims")
 }
-

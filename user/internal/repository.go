@@ -30,13 +30,13 @@ func (tr userRepository) FindUserNameAndPassword(userName, password string) (Use
 
 func (tr userRepository) GetAllUsers() []User {
 	var users []User
-	tr.DB.Preload("Tasks").Find(&users)
+	tr.DB.Find(&users)
 	return users
 }
 
 func (tr userRepository) GetUserById(id uint64) (User, error) {
 	var user User
-	result := tr.DB.Preload("Tasks").Find(&user, id)
+	result := tr.DB.Find(&user, id)
 	return user, result.Error
 }
 

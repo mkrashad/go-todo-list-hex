@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+
 	"gorm.io/gorm"
 
 	"github.com/mkrashad/go-todo/user/internal"
@@ -83,7 +84,7 @@ func (s *server) UpdateUser(ctx context.Context, req *pb.UpdateUserRequest) (*pb
 	return &pb.UpdateUserResponse{User: toPbUser(t)}, nil
 }
 
-func (s *server) DeleteUserById(ctx context.Context, req *pb.DeleteUserRequest) (*pb.DeleteUserResponse, error) {
+func (s *server) DeleteUser(ctx context.Context, req *pb.DeleteUserRequest) (*pb.DeleteUserResponse, error) {
 	err := s.service.DeleteUserById(uint64(req.Id))
 	if err != nil {
 		return nil, err

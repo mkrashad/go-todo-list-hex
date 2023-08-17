@@ -2,14 +2,16 @@ package router
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/mkrashad/go-todo/api-gw/metrics"
 	"github.com/mkrashad/go-todo/api-gw/handler"
+	"github.com/mkrashad/go-todo/api-gw/metrics"
 	"github.com/mkrashad/go-todo/api-gw/middleware"
 )
 
 func NewRouter(taskHandler handler.TaskHandler, userHandler handler.UserHandler, authHandler handler.AuthHandler) *gin.Engine {
 	r := gin.Default()
 	metrics.PrometheusMetrics(r)
+
+	r.Use(middleware.RequestId())
 
 	protected := r.Group("/api")
 	protected.Use(middleware.JwtAuthMiddleware())
