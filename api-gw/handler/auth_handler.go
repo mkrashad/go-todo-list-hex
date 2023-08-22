@@ -30,6 +30,7 @@ func (ah *AuthHandler) Login(c *gin.Context) {
 		Password: input.Password,
 	})
 
+
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Login or password is invalid"})
 		return

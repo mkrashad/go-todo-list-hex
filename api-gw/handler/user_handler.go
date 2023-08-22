@@ -33,8 +33,8 @@ func (uh *UserHandler) GetUserById(c *gin.Context) {
 	if err == nil {
 		c.JSON(200, user)
 	}
-	log.Print("Task not found")
-	c.Status(404)
+	log.Print("User not found")
+	c.Status(http.StatusNotFound)
 }
 
 func (uh *UserHandler) CreateUser(c *gin.Context) {
@@ -56,22 +56,27 @@ func (uh *UserHandler) CreateUser(c *gin.Context) {
 
 func (uh *UserHandler) UpdateUserById(c *gin.Context) {
 	var input pb.UpdateUserRequest
-	c.Bind(&input)
+
+	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	// id, _ := strconv.ParseUint(c.Param("id"), 10, 64)
+	input.Id = int64(id)
 
-	tasks, err := uh.userClient.UpdateUser(c.Request.Context(), &input)
+	u, err := uh.userClient.UpdateUser(c.Request.Context(), &input)
 	if err != nil {
-		c.Status(404)
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(200, tasks)
+	c.JSON(http.StatusOK, u)
 }
 
 func (uh *UserHandler) DeleteUserById(c *gin.Context) {

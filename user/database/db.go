@@ -1,26 +1,19 @@
 package database
 
 import (
+	"context"
 	"fmt"
-	"log"
 	"os"
 
-	"github.com/joho/godotenv"
-	"github.com/mkrashad/go-todo/user/internal"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+
+	"github.com/mkrashad/go-todo/user/ctxutils"
 )
 
 var DB *gorm.DB
 
-func LoadEnvVariables() {
-	err := godotenv.Load("/home/rashad/workspace/github.com/mkrashad/go-todo/user/.env")
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
-}
-
-func ConnectToDB() {
+func ConnectToDB(ctx context.Context) {
 	var err error
 	DbConfig := struct {
 		Host     string
@@ -39,14 +32,6 @@ func ConnectToDB() {
 	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
 	if err != nil {
-		log.Fatal("Failed to connect to database!")
+		ctxutils.GetRequestLogger(ctx).Fatal("Failed to connect to database!")
 	}
-}
-
-func SyncDB() {
-	err := DB.AutoMigrate(&internal.User{})
-	if err != nil {
-		log.Fatal("Could not migrate:", err)
-	}
-	fmt.Println("Database migrated succesfully")
 }
