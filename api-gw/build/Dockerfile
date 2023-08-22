@@ -19,5 +19,5 @@ COPY --from=builder /app /
 COPY --from=builder /go/bin/dlv /
 
 EXPOSE 8080 2345
-# CMD ["./api-gw-golang-todo"]
-CMD ./dlv --listen=:2345 --headless=true --api-version=2 --log exec ./api-gw-golang-todo
+CMD ["./api-gw-golang-todo"]
+# CMD ./dlv --listen=:2345 --headless=true --api-version=2 --log exec ./api-gw-golang-todo

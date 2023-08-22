@@ -22,6 +22,6 @@ COPY --from=builder /app /
 COPY --from=builder /go/bin/migrate /
 COPY --from=builder /go/bin/dlv /
 
-EXPOSE 8080
-# CMD ["./app-golang-task"]
-CMD ./dlv --listen=:2345 --headless=true --api-version=2 --log exec ./app-golang-task
+EXPOSE 8080 2345
+CMD ["./app-golang-task"]
+# CMD ./dlv --listen=:2345 --headless=true --api-version=2 --log exec ./app-golang-task

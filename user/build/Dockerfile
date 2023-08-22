@@ -24,5 +24,5 @@ COPY --from=builder /go/bin/migrate /
 COPY --from=builder /go/bin/dlv /
 
 EXPOSE 8080 2345
-# CMD ["./app-golang-user"]
-CMD ./dlv --listen=:2345 --headless=true --api-version=2 --log exec ./app-golang-user
+CMD ["./app-golang-user"]
+# CMD ./dlv --listen=:2345 --headless=true --api-version=2 --log exec ./app-golang-user
