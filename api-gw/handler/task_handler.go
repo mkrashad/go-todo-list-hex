@@ -61,11 +61,13 @@ func (th *TaskHandler) CreateTask(c *gin.Context) {
 
 func (th *TaskHandler) UpdateTaskById(c *gin.Context) {
 	var input pb.UpdateTaskRequest
+	id, _ := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	// id, _ := strconv.ParseUint(c.Param("id"), 10, 64)
+
+	input.Id = int64(id)
 
 	task, err := th.taskClient.UpdateTask(c.Request.Context(), &input)
 	if err != nil {
