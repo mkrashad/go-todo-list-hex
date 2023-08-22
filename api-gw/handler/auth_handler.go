@@ -2,7 +2,7 @@ package handler
 
 import (
 	"net/http"
-
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/mkrashad/go-todo/api-gw/handler/auth"
 	"github.com/mkrashad/go-todo/api-gw/pb"
@@ -30,7 +30,6 @@ func (ah *AuthHandler) Login(c *gin.Context) {
 		Password: input.Password,
 	})
 
-
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Login or password is invalid"})
 		return
@@ -51,6 +50,15 @@ func (ah *AuthHandler) Register(c *gin.Context) {
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
+	}
+	GetAllUsersRequest := pb.GetAllUsersRequest{}
+	users, _ := ah.userClient.GetAllUsers(c.Request.Context(), &GetAllUsersRequest)
+	fmt.Println(input.Username)
+	for _, user := range users.Users {
+		if user.Username == input.Username {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "User exist"})
+			return
+		}
 	}
 
 	_, err := ah.userClient.CreateUser(c.Request.Context(), &input)
