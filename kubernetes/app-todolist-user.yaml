@@ -34,7 +34,7 @@ spec:
                   key: app-todolist-postgres-password
                   name: app-golang-secret
             - name: DB_HOST
-              value: app-todolist-db-task
+              value: app-todolist-db-user
             - name: DB_PORT
               value: "5432"
             - name: DB_NAME
