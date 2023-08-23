@@ -40,14 +40,10 @@ func (tr taskRepository) CreateTask(task Task) (Task, error) {
 	return task, result.Error
 }
 
-func (tr taskRepository) UpdateTaskById(id uint64, data Task) (Task, error) {
+func (tr taskRepository) UpdateTaskById(id uint64, updatedTask Task) (Task, error) {
 	var task Task
 	tr.DB.Find(&task, id)
-	result := tr.DB.Model(&task).Updates(map[string]interface{}{
-		"taskName":  data.TaskName,
-		"completed": data.Completed,
-		"userID": data.UserID,
-	})
+	result := tr.DB.Model(&task).Updates(updatedTask)
 	return task, result.Error
 }
 

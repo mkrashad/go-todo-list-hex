@@ -46,7 +46,7 @@ func (s *server) GetTaskById(ctx context.Context, req *pb.GetTaskByIdRequest) (*
 func (s *server) CreateTask(ctx context.Context, req *pb.CreateTaskRequest) (*pb.CreateTaskResponse, error) {
 	task := task.Task{
 		TaskName:  req.TaskName,
-		Completed: req.Completed,
+		Completed: &req.Completed,
 		UserID:    uint64(req.UserId),
 	}
 	t, err := s.service.CreateTask(task)
@@ -60,7 +60,7 @@ func (s *server) UpdateTask(ctx context.Context, req *pb.UpdateTaskRequest) (*pb
 	task := task.Task{
 		Model:     gorm.Model{ID: uint(req.Id)},
 		TaskName:  req.TaskName,
-		Completed: req.Completed,
+		Completed: &req.Completed,
 		UserID:    uint64(req.UserId),
 	}
 	t, err := s.service.UpdateTaskById(uint64(req.Id), task)
@@ -70,7 +70,7 @@ func (s *server) UpdateTask(ctx context.Context, req *pb.UpdateTaskRequest) (*pb
 	return &pb.UpdateTaskResponse{Task: toPbTask(t)}, nil
 }
 
-func (s *server) DeleteTaskById(ctx context.Context, req *pb.DeleteTaskRequest) (*pb.DeleteTaskResponse, error) {
+func (s *server) DeleteTask(ctx context.Context, req *pb.DeleteTaskRequest) (*pb.DeleteTaskResponse, error) {
 	err := s.service.DeleteTaskById(uint64(req.Id))
 	if err != nil {
 		return nil, err
@@ -82,7 +82,7 @@ func toPbTask(t task.Task) *pb.Task {
 	return &pb.Task{
 		Id:        int64(t.ID),
 		TaskName:  t.TaskName,
-		Completed: t.Completed,
+		Completed: *t.Completed,
 		UserId:    int64(t.UserID),
 	}
 }

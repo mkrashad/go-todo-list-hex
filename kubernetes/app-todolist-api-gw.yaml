@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-todolist-api-gw
+  labels:
+    app: app-todolist-api-gw
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app-todolist-api-gw
+  template:
+    metadata:
+      labels:
+        app: app-todolist-api-gw
+    spec:
+      containers:
+        - name: app-todolist-api-gw
+          image: go-todo_app-api-gw
+          imagePullPolicy: IfNotPresent
+      #     env:
+      #       - name: APP_TASK_HOST
+      #         value: app-todolist-task
+      #       - name: APP_TASK_PORT
+      #         value: '8080'
+      #       - name: APP_USER_HOST
+      #         value: app-todolist-user
+      #       - name: APP_USER_PORT
+      #         value: '8080'
+          ports:
+            - containerPort: 8083
+---
+apiVersion: v1
+metadata:
+  name: app-todolist-api-gw
+  labels:
+    app: app-todolist-api-gw
+spec:
+  ports:
+    - name: http
+      protocol: TCP
+      port: 8080
+      targetPort: 8083
+  selector:
+    app: app-todolist-api-gw
+  type: ClusterIP
+kind: Service
