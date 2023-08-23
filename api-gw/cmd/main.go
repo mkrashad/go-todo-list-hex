@@ -12,13 +12,13 @@ import (
 )
 
 func main() {
-	tc, err := grpc.Dial("app-task:8082", grpc.WithTransportCredentials(insecure.NewCredentials()), grpc.WithUnaryInterceptor(interceptor.ContextPropagation()))
+	tc, err := grpc.Dial("app-todolist-task:8080", grpc.WithTransportCredentials(insecure.NewCredentials()), grpc.WithUnaryInterceptor(interceptor.ContextPropagation()))
 	if err != nil {
 		log.Fatal("Could not connect to task microservice: ", err)
 	}
 	taskClient := pb.NewTaskServiceClient(tc)
 
-	uc, err := grpc.Dial("app-user:8081", grpc.WithTransportCredentials(insecure.NewCredentials()), grpc.WithUnaryInterceptor(interceptor.ContextPropagation()))
+	uc, err := grpc.Dial("app-todolist-user:8080", grpc.WithTransportCredentials(insecure.NewCredentials()), grpc.WithUnaryInterceptor(interceptor.ContextPropagation()))
 	if err != nil {
 		log.Fatal("Could not connect to user microservice: ", err)
 	}

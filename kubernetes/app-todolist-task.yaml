@@ -1,0 +1,86 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-todolist-task
+  labels:
+    app: app-todolist-task
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app-todolist-task
+  template:
+    metadata:
+      labels:
+        app: app-todolist-task
+    spec:
+      containers:
+        - name: app-todolist-task
+          image: go-todo_app-task:1.0
+          imagePullPolicy: IfNotPresent
+          resources:
+            limits:
+              memory: 512Mi
+              cpu: "1"
+          env:
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  key: app-todolist-postgres-user
+                  name: app-golang-secret
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: app-todolist-postgres-password
+                  name: app-golang-secret
+            - name: DB_HOST
+              value: app-todolist-db-task
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_NAME
+              value: todolist
+          ports:
+            - containerPort: 8082
+      initContainers:
+        - name: init-app-todolist-task
+          image: go-todo_app-task:1.0
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  key: app-todolist-postgres-user
+                  name: app-golang-secret
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: app-todolist-postgres-password
+                  name: app-golang-secret
+            - name: DB_HOST
+              value: app-todolist-db-task
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_NAME
+              value: todolist
+          command: ["/bin/sh"]
+          args:
+            - -c
+            - >-
+              ./migrate -path database/migrations -database "postgresql://$(DB_USER):$(DB_PASSWORD)@${DB_HOST}:$(DB_PORT)/$(DB_NAME)?sslmode=disable" up
+
+---
+apiVersion: v1
+metadata:
+  name: app-todolist-task
+  labels:
+    app: app-todolist-task
+spec:
+  ports:
+    - name: http
+      protocol: TCP
+      port: 8080
+      targetPort: 8082
+  selector:
+    app: app-todolist-task
+  type: ClusterIP
+kind: Service

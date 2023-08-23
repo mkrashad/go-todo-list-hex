@@ -2,7 +2,6 @@ package handler
 
 import (
 	"net/http"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/mkrashad/go-todo/api-gw/handler/auth"
 	"github.com/mkrashad/go-todo/api-gw/pb"
@@ -53,7 +52,6 @@ func (ah *AuthHandler) Register(c *gin.Context) {
 	}
 	GetAllUsersRequest := pb.GetAllUsersRequest{}
 	users, _ := ah.userClient.GetAllUsers(c.Request.Context(), &GetAllUsersRequest)
-	fmt.Println(input.Username)
 	for _, user := range users.Users {
 		if user.Username == input.Username {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "User exist"})

@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: app-golang-postgres
+  name: app-todolist-db-task
   labels:
-    name: app-golang-postgres
+    name: app-todolist-db-task
 spec:
   selector:
     matchLabels:
-      app: app-golang-postgres
+      app: app-todolist-db-task
   strategy:
     type: Recreate
   replicas: 1
   template:
     metadata:
       labels:
-        app: app-golang-postgres
+        app: app-todolist-db-task
     spec:
       containers:
         - image: postgres:alpine
-          name: app-golang-postgres
+          name: app-todolist-db-task
           resources:
             limits:
               memory: 512Mi
@@ -27,12 +27,12 @@ spec:
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
-                  key: app-golang-postgres-user
+                  key: app-todolist-postgres-user
                   name: app-golang-secret
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  key: app-golang-postgres-password
+                  key: app-todolist-postgres-password
                   name: app-golang-secret
             - name: POSTGRES_DB
               value: todolist
@@ -42,5 +42,22 @@ spec:
             tcpSocket:
               port: 5432
       volumes:
-        - name: app-golang-postgres-data
+        - name: app-todolist-db-task-data
           emptyDir: {}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-todolist-db-task
+  labels:
+    app: app-todolist-db-task
+spec:
+  type: ClusterIP
+  ports:
+    - name: psql
+      protocol: TCP
+      port: 5432
+      targetPort: 5432
+  selector:
+    app: app-todolist-db-task
